@@ -20,10 +20,8 @@ const initCodeBlock = () => {
     });
 
     copy_button.addEventListener("click", () => {
-      // const code_lines = [...codebox.querySelectorAll(".code .line")];
-      // const code_content = code_lines.map((line) => line.innerText).join("\n");
-      const code_content =
-      codebox.querySelector("code")?.innerText || "";
+      const code_lines = [...codebox.querySelectorAll(".code .line")];
+      const code_content = code_lines.map((line) => line.innerText).join("\n");
       if (GLOBALCONFIG.code_copy_text) {
         navigator.clipboard.writeText(GLOBALCONFIG.share_text + '\nLink: ' + document.URL + '\n\n' + code_content);
       } else {
