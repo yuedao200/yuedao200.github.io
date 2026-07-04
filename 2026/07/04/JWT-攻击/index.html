@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="author" content="月岛"/><meta name="copyright" content="月岛"/><meta name="theme-color" content="#FFB347"/><meta name="format-detection" content="telephone=no"/><meta name="keywords" content="月岛的博客，月岛，技术博客，知识分享，信息安全，网络安全"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-touch-fullscreen" content="yes"/><meta name="application-name" content="JWT 攻击 | 月岛的博客"/><meta name="apple-mobile-web-app-title" content="JWT 攻击 | 月岛的博客"/><meta name="apple-mobile-web-app-status-bar-style" content="#FFB347"/><link rel="canonical" href="http://example.com/2026/07/04/JWT-攻击/"/><meta name="description" content="JWT 攻击JWT （JSON Web Token） 是目前最流行的跨域认证解决方案，是一种基于 Token 的认证授权机制。 从 JWT 的全称可以看出，JWT 本身也是 Token，一种规范化之后的 JSON 结构的 Token。 JWT 自身包含了身份验证所需要的所有信息，因此，我们的服务器不需要存储 Session 信息。这显然增加了系统的可用性和伸缩性，大大减轻了服务端的压力。 J...">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JWT 攻击 | 月岛的博客">
+<meta property="og:url" content="http://example.com/2026/07/04/JWT-%E6%94%BB%E5%87%BB/index.html">
+<meta property="og:site_name" content="月岛的博客">
+<meta property="og:description" content="JWT 攻击JWT （JSON Web Token） 是目前最流行的跨域认证解决方案，是一种基于 Token 的认证授权机制。 从 JWT 的全称可以看出，JWT 本身也是 Token，一种规范化之后的 JSON 结构的 Token。 JWT 自身包含了身份验证所需要的所有信息，因此，我们的服务器不需要存储 Session 信息。这显然增加了系统的可用性和伸缩性，大大减轻了服务端的压力。 J...">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2026/07/04/JWT-%E6%94%BB%E5%87%BB/assets/images/Hexo-Theme-MEOW.png">
+<meta property="article:published_time" content="2026-07-04T07:57:53.000Z">
+<meta property="article:modified_time" content="2026-07-04T07:58:39.842Z">
+<meta property="article:author" content="月岛">
+<meta property="article:tag" content="月岛的博客，月岛，技术博客，知识分享，信息安全，网络安全">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2026/07/04/JWT-%E6%94%BB%E5%87%BB/assets/images/Hexo-Theme-MEOW.png"><meta name="robots" content="index,follow"/><meta name="googlebot" content="index,follow"/><meta name="revisit-after" content="1 days"/><title>JWT 攻击 | 月岛的博客</title><link rel="shortcut icon" href="/assets/images/Hexo-Theme-MEOW.ico"><link rel="preconnect" href="/assets"/><link rel="preconnect" href="assets"/>
+<link rel="stylesheet" href="/css/style.css">
+
+<link rel="stylesheet" href="/css/third-party/dist/APlayer.min.css">
+
+<link rel="stylesheet" href="/css/third-party/dist/snackbar.min.css">
+<link rel="prefetch" href="/"/><link rel="prefetch" href="/archives"/><link rel="prefetch" href="/tags"/><meta name="generator" content="Hexo 8.1.1"></head><body bg-style="none"><div class="post-progressbar-container"><div class="post-progressbar"></div></div><header><div id="navbar"><div id="nav-info"><a id="site-icon" href="/" title="Home"><img src="/assets/images/Hexo-Theme-MEOW.png" alt="Logo"/></a><a id="site-name" href="/" title="Home"><div>月岛的博客</div><img src="/assets/images/svg/uc/uc-home.svg" class="icon noview" alt="Icon"></a></div><div id="nav-menu"><div class="menu-item"><a href="/categories"><img src="/assets/images/svg/uc/uc-category.svg" class="icon noview" alt="Icon"><span>Categories</span></a></div><div class="menu-item"><a href="/tags"><img src="/assets/images/svg/uc/uc-tag.svg" class="icon noview" alt="Icon"><span>Tags</span></a></div><div class="menu-item"><a href="/about"><img src="/assets/images/svg/uc/uc-about.svg" class="icon noview" alt="Icon"><span>About</span></a></div></div><div id="nav-function"><div id="menu-btn"><a href="javascript:void(0);" title="Toggle Menu"><img src="/assets/images/svg/uc/uc-menu.svg" class="icon noview" alt="Icon"></a></div></div></div></header><div id="menu-aside"><div id="menu-aside-container"><div id="menu-aside-info"><a href="/" title="Home"><img src="/assets/images/Hexo-Theme-MEOW.png" alt="Logo"/></a><a href="/" title="Home">月岛的博客</a></div><div class="menu-aside-item"><a href="/categories"><img src="/assets/images/svg/uc/uc-category.svg" class="icon noview" alt="Icon"><span>Categories</span></a></div><div class="menu-aside-item"><a href="/tags"><img src="/assets/images/svg/uc/uc-tag.svg" class="icon noview" alt="Icon"><span>Tags</span></a></div><div class="menu-aside-item"><a href="/about"><img src="/assets/images/svg/uc/uc-about.svg" class="icon noview" alt="Icon"><span>About</span></a></div><hr/></div></div><main><div class="banner"><div class="banner-info"><div class="banner-avatar"><img src="/assets/images/Hexo-Theme-MEOW.png" alt="Avatar"/></div><div class="banner-title">「 MEOW 」</div></div></div><div class="post-container"><div class="post-main"><div class="post-content"><h1 class="post-title">JWT 攻击</h1><div class="post-author"><span>Author: 月岛</span></div><div class="post-meta"><div class="post-info"><div class="post-date"><div class="post-pubdate"><img src="/assets/images/svg/ta/ta-pubdate.svg" class="icon noview" alt="Icon"><span>Created: 2026-07-04</span></div><div class="post-update"><img src="/assets/images/svg/ta/ta-update.svg" class="icon noview" alt="Icon"><span>Updated: 2026-07-04</span></div></div><div class="post-read"><div class="post-pageview"><img src="/assets/images/svg/ta/ta-fire.svg" class="icon noview" alt="Icon"><span>Hits: </span><span id="vercount_value_page_pv"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l0 -3" /><path d="M16.25 7.75l2.15 -2.15" /><path d="M18 12l3 0" /><path d="M16.25 16.25l2.15 2.15" /><path d="M12 18l0 3" /><path d="M7.75 16.25l-2.15 2.15" /><path d="M6 12l-3 0" /><path d="M7.75 7.75l-2.15 -2.15" /></svg></span></div></div></div><div class="post-attribute"></div></div><div class="post markdown" indent="false"><h1 id="JWT-攻击"><a href="#JWT-攻击" class="headerlink" title="JWT 攻击"></a>JWT 攻击</h1><p>JWT （JSON Web Token） 是目前最流行的跨域认证解决方案，是一种基于 Token 的认证授权机制。 从 JWT 的全称可以看出，JWT 本身也是 Token，一种规范化之后的 JSON 结构的 Token。</p>
+<p>JWT 自身包含了身份验证所需要的所有信息，因此，我们的服务器不需要存储 Session 信息。这显然增加了系统的可用性和伸缩性，大大减轻了服务端的压力。</p>
+<h2 id="JWT组成"><a href="#JWT组成" class="headerlink" title="JWT组成"></a>JWT组成</h2><p>JWT 由三部分组成： 头部 、 有效载荷和签名 。这三部分之间用点号分隔，如下例所示：</p>
+<div class="code-container" code-lang="Plaintext"><div class="codebox"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJraWQiOiI5MTM2ZGRiMy1jYjBhLTRhMTktYTA3ZS1lYWRmNWE0NGM4YjUiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJwb3J0c3dpZ2dlciIsImV4cCI6MTY0ODAzNzE2NCwibmFtZSI6IkNhcmxvcyBNb250b3lhIiwic3ViIjoiY2FybG9zIiwicm9sZSI6ImJsb2dfYXV0aG9yIiwiZW1haWwiOiJjYXJsb3NAY2FybG9zLW1vbnRveWEubmV0IiwiaWF0IjoxNTE2MjM5MDIyfQ.SYZBPIBg2CRjXAJ8vCER0LA_ENjII1JakvNQoP-Hw6GG1zfl4JyngsZReIfqRvIAEi5L4HV0q7_9qGhQZvy9ZdxEJbwTxRs_6Lb-fZTDpW6lKYNdMyjw45_alSCZ1fypsMWz_2mTpQzil0lOtps5Ei_z7mM7M8gCwe_AGpI53JxduQOaB5HkT5gVrv9cKu9CsW5MS6ZbqYXpGyOG5ehoxqm8DL5tFYaW3lB50ELxi0KsuTKEbD0t5BCl0aCR2MBJWAbN-xeLwEenaqBiwPVvKixYleeDQiBEIylFdNNIMviKRgXiYuAvMziVPbwSgkZVHeEdF5MQP1Oe2Spac-6IfA</span><br></pre></td></tr></table></figure><div class="code-fold" title="Fold/Open"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg></div><div class="code-copy" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg></div></div></div>
+
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="https://oss.javaguide.cn/javaguide/system-design/jwt/jwt-composition.png"  alt="JWT 组成" style="zoom:50%;" >
+
+<ul>
+<li><strong>Header（头部）</strong> : 描述 JWT 的元数据，定义了生成签名的算法（alg）以及 <code>Token</code> 的类型。Header 被 Base64Url 编码后成为 JWT 的第一部分。</li>
+<li><strong>Payload（载荷）</strong> : 用来存放实际需要传递的数据，包含声明（Claims），如<code>sub</code>、<code>jti</code>。Payload 被 Base64Url 编码后成为 JWT 的第二部分。</li>
+<li><strong>Signature（签名）</strong>：服务器通过 Payload、Header 和一个密钥(Secret)使用 Header 里面指定的签名算法（默认是 HMAC SHA256）生成。生成的签名会成为 JWT 的第三部分。</li>
+</ul>
+<p>例如：</p>
+<div class="code-container" code-lang="Plaintext"><div class="codebox"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HMACSHA256(base64UrlEncode(header) + &quot;.&quot; +base64UrlEncode(payload),secret)</span><br></pre></td></tr></table></figure><div class="code-fold" title="Fold/Open"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg></div><div class="code-copy" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg></div></div></div>
+
+<p>其中HMACSHA256是使用HMAC SHA256算法进行签名，header和payload是经过Base64编码的Header和Payload，secret是用于签名和验证的密钥，最终将Header、Payload和Signature连接起来用句点(.)分隔就形成了一个完整的JWT</p>
+<ul>
+<li><strong>JWK（JSON Web Key）</strong>：JWK是指用于JWT的密钥。它可以是对称加密密钥（例如密码），也可以是非对称加密密钥（例如公钥&#x2F;私钥对）。JWK用于生成和验证JWT的签名，确保只有拥有正确密钥的一方能够对JWT进行操作。</li>
+<li><strong>JKU（JSON Web Key Set URL）</strong>：JKU是JWT Header中的一个字段，该字段包含一个URI，用于指定用于验证令牌密钥的服务器。当需要获取公钥或密钥集合时，可以使用JKU字段指定的URI来获取相关的JWK信息。</li>
+</ul>
+<p>JWT加密解密网站： <a target="_blank" rel="noopener" href="https://jwt.io/">jwt.io</a></p>
+<h2 id="JWT工作过程"><a href="#JWT工作过程" class="headerlink" title="JWT工作过程"></a>JWT工作过程</h2><p>在基于 JWT 进行身份验证的应用程序中，服务器通过 Payload、Header 和 Secret(密钥)创建 JWT 并将 JWT 发送给客户端。客户端接收到 JWT 之后，会将其保存在 Cookie 或者 localStorage 里面，以后客户端发出的所有请求都会携带这个令牌。</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="https://oss.javaguide.cn/github/javaguide/system-design/jwt/jwt-authentication%20process.png"  alt=" JWT 身份验证示意图" style="zoom:50%;" >
+
+<p>简化后的步骤如下：</p>
+<ol>
+<li>用户向服务器发送用户名、密码以及验证码用于登陆系统；</li>
+<li>如果用户用户名、密码以及验证码校验正确的话，服务端会返回已经签名的 Token，也就是 JWT；</li>
+<li>客户端收到 Token 后自己保存起来（比如浏览器的 <code>localStorage</code> ）；</li>
+<li>用户以后每次向后端发请求都在 Header 中带上这个 JWT ；</li>
+<li>服务端检查 JWT 并从中获取用户相关信息。</li>
+</ol>
+<h2 id="burpsuite-JWT-labs"><a href="#burpsuite-JWT-labs" class="headerlink" title="burpsuite JWT labs"></a>burpsuite JWT labs</h2><h3 id="未验证签名"><a href="#未验证签名" class="headerlink" title="未验证签名"></a>未验证签名</h3><p>原因：开发者只将传入的令牌传递给 <code>decode()</code> 方法，并没有验证令牌。可随意改动有效载荷部分。</p>
+<p><code>decode() 可以帮助你看到：</code></p>
+<ul>
+<li><code>header 声称使用了什么算法</code></li>
+<li><code>sub` 指向哪个用户或服务</code></li>
+<li><code>exp` 是否已经过去</code></li>
+<li><code>有哪些 scope 或 role</code></li>
+</ul>
+<p><code>Verify() 验证会检查：</code></p>
+<ul>
+<li><code>签名是否匹配可信 secret 或 public key。</code></li>
+<li><code>算法是否在应用允许列表中。</code></li>
+<li><code>iss` 是否是可信签发方。</code></li>
+<li><code>aud` 是否匹配当前服务。</code></li>
+<li><code>exp`、`nbf` 和时钟偏差规则是否满足。</code></li>
+</ul>
+<p>对cookie进行base64解密。然后将sub改成administrator,加密</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260621153033125.png"  alt="image-20260621153033125" style="zoom:50%;" >
+
+<p>替换cookie访问&#x2F;admin页面：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260621153014908.png"  alt="image-20260621153014908" style="zoom:50%;" >
+
+<p>成功授权访问后，找到删除carlos的链接。利用伪造的cookie进行删除：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260621155323858.png"  alt="image-20260621155323858" style="zoom:50%;" >
+
+<h3 id="有缺陷的签名验证"><a href="#有缺陷的签名验证" class="headerlink" title="有缺陷的签名验证"></a>有缺陷的签名验证</h3><p>服务器配置不安全，会接受未签名的 JWT。</p>
+<p>将alg改为none</p>
+<p>sub改为administrator</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260702214315997.png"  alt="image-20260702214315997" style="zoom:50%;" >
+
+<p>使用未签名的JWT成功访问&#x2F;admin</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260702214153374.png"  alt="image-20260702214153374" style="zoom:50%;" >
+
+<h3 id="弱签名密钥"><a href="#弱签名密钥" class="headerlink" title="弱签名密钥"></a>弱签名密钥</h3><p>该lab使用HMAC SHA256(对称加密)算法进行签名，使用jwt-tool对密钥进行爆破</p>
+<div class="code-container" code-lang="Plaintext"><div class="codebox"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:\TOOLS&gt;jwt-brute-force-tool-windows-amd64.exe crack -token &quot;eyJraWQiOiJjNTQxN2ZiOS1hMjRiLTQxZWYtYjRhMi0zNjJhZGM0NTA4ZDciLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb3J0c3dpZ2dlciIsImV4cCI6MTc4MzAwNTY2MCwic3ViIjoid2llbmVyIn0.z-H6a8mrxtynuaIX8eR6sC83GhywwADM72rb0ZEVkHQ&quot; -dict key.txt</span><br><span class="line">成功破解密钥！密钥为: secret1</span><br></pre></td></tr></table></figure><div class="code-fold" title="Fold/Open"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg></div><div class="code-copy" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg></div></div></div>
+
+<p>生成(symmetric key)对称密钥：密钥为secret1</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260702223639361.png"  alt="image-20260702223639361" style="zoom:50%;" >
+
+<p>更改sub改为administrator,使用创建的对称密钥进行签名</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260702223304182.png"  alt="image-20260702223304182" style="zoom:50%;" >
+
+
+
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260702223400983.png"  alt="image-20260702223400983" style="zoom:50%;" >
+
+<p>验证</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260702224026394.png"  alt="image-20260702224026394" style="zoom:50%;" >
+
+<h3 id="注入-jwk-头部"><a href="#注入-jwk-头部" class="headerlink" title="注入 jwk 头部"></a>注入 jwk 头部</h3><p>JWK是指用于JWT的密钥。它可以是对称加密密钥（例如密码），也可以是非对称加密密钥（例如公钥&#x2F;私钥对）。JWK用于生成和验证JWT的签名，确保只有拥有正确密钥的一方能够对JWT进行操作。JWK无法验证所提供的密钥是否来自可信来源。伪造一个RSA密钥对，使用JWK将公钥发送给服务端。服务端使用公钥验证签名</p>
+<p>新建RSA密钥对</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703154252785.png"  alt="image-20260703154252785" style="zoom:50%;" >
+
+<p>更改sub声明</p>
+<p>点击攻击，选择嵌入JWK攻击</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703154416055.png"  alt="image-20260703154416055" style="zoom:50%;" >
+
+<p>成功插入JWK</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703154722768.png"  alt="image-20260703154722768" style="zoom:50%;" >
+
+<p>验证：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703154516165.png"  alt="image-20260703154516165" style="zoom:50%;" >
+
+<h3 id="注入jku头部"><a href="#注入jku头部" class="headerlink" title="注入jku头部"></a>注入jku头部</h3><p>与JWK类似，JKU是JWT Header中的一个字段，该字段包含一个URI，用于指定用于验证令牌密钥的服务器。</p>
+<p>创建一个网站，body部分放入生成rsa公钥（创建rsa密钥对部分省略）</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703215114281.png"  alt="image-20260703215114281" style="zoom:50%;" >
+
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703221511455.png"  alt="image-20260703221511455" style="zoom:50%;" >
+
+<p>在头部插入jku,参数为存放公钥网站，更改sub.使用创建的rsa私钥进行签名</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703221328820.png"  alt="image-20260703221328820" style="zoom:50%;" >
+
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703221626310.png"  alt="image-20260703221626310" style="zoom:50%;" >
+
+
+
+<h3 id="KID路径遍历"><a href="#KID路径遍历" class="headerlink" title="KID路径遍历"></a>KID路径遍历</h3><p>在这个漏洞中，攻击者利用了 JWT 头部（Header）中的 <strong><code>kid</code>（Key ID）</strong> 参数。服务端的漏洞在于：<strong>它将 <code>kid</code> 的值直接拼接到了文件路径中，去服务器本地读取密钥文件。</strong></p>
+<p>如果系统没有对 <code>kid</code> 进行严格的过滤，攻击者可以输入 <code>../../../../dev/null</code>。 此时，路径拼接变成 <code>/path/to/keys/../../../../dev/null</code>，实际上指向了 <strong><code>/dev/null</code></strong></p>
+<p>这意味着，服务端在验签时，使用的“密钥”变成了<strong>一个空字符串</strong>。攻击者只要在本地使用空字符串作为密钥对伪造的 JWT 进行签名，就能完美通过服务端的校验。</p>
+<p>创建一个对称密钥，k参数置为空：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703222952725.png"  alt="image-20260703222952725" style="zoom:50%;" >
+
+<p>将kid指向系统的一个空文件，更改sub</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703222836543.png"  alt="image-20260703222836543" style="zoom:50%;" >
+
+<p>使用创建的密钥进行签名</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703223100987.png"  alt="image-20260703223100987" style="zoom:50%;" >
+
+<p>验证：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703223222031.png"  alt="image-20260703223222031" style="zoom:50%;" >
+
+<h3 id="算法混淆"><a href="#算法混淆" class="headerlink" title="算法混淆"></a>算法混淆</h3><p>服务器暴露了jwk文件，访问 <code>/jwks.json</code>进行读取，可获取rsa公钥</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703231155335.png"  alt="image-20260703231155335" style="zoom:50%;" >
+
+<p>生成rsa密钥对，将公钥粘贴到key框</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703233051370.png"  alt="image-20260703233051370" style="zoom:50%;" >
+
+<p>右键单击刚刚创建的密钥条目，然后选择<strong>Copy Public Key as PEM</strong>。对该 PEM 密钥进行 Base64 编码</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703233533757.png"  alt="image-20260703233533757" style="zoom:50%;" >
+
+<p>新建对称密钥。在对话框中，单击“生成”以生成 JWK 格式的新密钥。将 k 属性的生成值替换为Base64 编码的PEM。</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703233450471.png"  alt="image-20260703233450471" style="zoom:50%;" >
+
+<p>将算法改为HS256,更改sub</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703233758954.png"  alt="image-20260703233758954" style="zoom:50%;" >
+
+<p>使用创建的密钥进行签名</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703233836822.png"  alt="image-20260703233836822" style="zoom:50%;" >
+
+<p>验证：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703232820959.png"  alt="image-20260703232820959" style="zoom:50%;" >
+
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260703233958605.png"  alt="image-20260703233958605" style="zoom:50%;" >
+
+<h3 id="算法混淆（无公钥版）"><a href="#算法混淆（无公钥版）" class="headerlink" title="算法混淆（无公钥版）"></a>算法混淆（无公钥版）</h3><p>思路：</p>
+<ol>
+<li>获取两个不同的有效 Token</li>
+<li>恢复公钥</li>
+<li>转换公钥格式（关键避坑点）</li>
+<li>伪造并利用算法混淆</li>
+</ol>
+<p>拉取sig2n工具：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260704114740256.png"  alt="image-20260704114740256" style="zoom:50%;" >
+
+<p>计算公钥值：</p>
+<div class="code-container" code-lang="Plaintext"><div class="codebox"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -it portswigger/sig2n &lt;token1&gt; &lt;token2&gt;</span><br></pre></td></tr></table></figure><div class="code-fold" title="Fold/Open"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg></div><div class="code-copy" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg></div></div></div>
+
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260704115154066.png"  alt="image-20260704115154066" style="zoom:50%;" >
+
+<p><strong>X.509</strong> 和 <strong>PKCS#1</strong> 是密码学中关于<strong>非对称加密（尤其是 RSA 算法）的两个重要标准</strong>。</p>
+<p>X.509 是密码学里公钥证书的格式标准。X.509 证书已应用在包括 TLS&#x2F;SSL 在内的众多网络协议里，同时它也用在很多非在线应用场景里，比如电子签名服务。X.509 证书里含有<strong>公钥</strong>、<strong>身份信息</strong>（比如网络主机名，组织的名称或个体名称等）和<strong>签名信息</strong>（可以是证书签发机构 CA 的签名，也可以是自签名）。</p>
+<p><strong>PKCS</strong>（Public-Key Cryptography Standards，公钥密码学标准）是由 RSA 安全公司在 20 世纪 90 年代制定的一系列行业标准。规定 RSA 密钥的<strong>底层数学成分</strong>应该怎么排列。我们知道 RSA 密钥是由一堆数学数字（如模数 n、公钥指数 e、私钥指数 d）组成的，PKCS#1 决定了把这些数字按什么顺序拼成一段二进制数据。</p>
+<p><strong>文本外观（PEM 格式）：</strong></p>
+<ul>
+<li><strong>公钥：</strong> 文本开头通常是 <code>-----BEGIN RSA PUBLIC KEY-----</code></li>
+<li><strong>私钥：</strong> 文本开头通常是 <code>-----BEGIN RSA PRIVATE KEY-----</code></li>
+</ul>
+<div class="code-container" code-lang="Plaintext"><div class="codebox"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Found n with multiplier 6:</span><br><span class="line">    Base64 encoded x509 key: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFzaHNTaUladWhtN1kwTUxpZjFWKwozQUVVL1BNbTFzNmEyTzZhNWprWmtBV1NXNmFzaFNEcWRGa3JaUzJwbzZObmZpRG1pUDFkRmpXWHplY1N5dC95CmV0VkZWVGo4S0RsbTF6bS9MazkvQUNqTkZoVWlGV0tLeFBkNHlNSkNDcjc0K1l2SkZaVWd6dE9SSTh4Kzl6RlcKWnJVNEEvZnF1dzZ6ZXFDbnAvODkwejN3OFBHcHJFcFEza1FIK0g0bVMwMkhSSllWbXMyais1TlE0UmJUUE16YQozZ1YwbXgza3ZCRnl5b3RBN2pVald6dzlQL2w3ZlI1U2QyVGN3M0VselVKa3Y2QjJ0RFhXekR5YXlJcHRWVm84Cm8zK00vdHl5K3ErRExTTHBjbm95b0JWcDhiN3hkVTZlYWwvcGdCQUNZYlorK0g2SFg5aWwrN05OZGpvdTdxM2wKY1FJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==</span><br><span class="line">    Tampered JWT: eyJraWQiOiI4YzNiYWRkMC04YWZjLTRlN2ItYWVjNy02ZDNlOGE1NjUzOTciLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiAicG9ydHN3aWdnZXIiLCAiZXhwIjogMTc4MzIyMzQzMywgInN1YiI6ICJ3aWVuZXIifQ.SL-siZQjI69iRZNVwAy-QtOCAD2WI4WR15DJBM1Vw8Q</span><br><span class="line">    Base64 encoded pkcs1 key: LS0tLS1CRUdJTiBSU0EgUFVCTElDIEtFWS0tLS0tCk1JSUJDZ0tDQVFFQXNoc1NpSVp1aG03WTBNTGlmMVYrM0FFVS9QTW0xczZhMk82YTVqa1prQVdTVzZhc2hTRHEKZEZrclpTMnBvNk5uZmlEbWlQMWRGaldYemVjU3l0L3lldFZGVlRqOEtEbG0xem0vTGs5L0FDak5GaFVpRldLSwp4UGQ0eU1KQ0NyNzQrWXZKRlpVZ3p0T1JJOHgrOXpGV1pyVTRBL2ZxdXc2emVxQ25wLzg5MHozdzhQR3ByRXBRCjNrUUgrSDRtUzAySFJKWVZtczJqKzVOUTRSYlRQTXphM2dWMG14M2t2QkZ5eW90QTdqVWpXenc5UC9sN2ZSNVMKZDJUY3czRWx6VUprdjZCMnREWFd6RHlheUlwdFZWbzhvMytNL3R5eStxK0RMU0xwY25veW9CVnA4Yjd4ZFU2ZQphbC9wZ0JBQ1liWisrSDZIWDlpbCs3Tk5kam91N3EzbGNRSURBUUFCCi0tLS0tRU5EIFJTQSBQVUJMSUMgS0VZLS0tLS0K</span><br><span class="line">    Tampered JWT: eyJraWQiOiI4YzNiYWRkMC04YWZjLTRlN2ItYWVjNy02ZDNlOGE1NjUzOTciLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiAicG9ydHN3aWdnZXIiLCAiZXhwIjogMTc4MzIyMzQzMywgInN1YiI6ICJ3aWVuZXIifQ.Un_-1iZo6qPDW3mVLzjPXmjzcmn_bs_SQGDhyNrQ0Yg</span><br></pre></td></tr></table></figure><div class="code-fold" title="Fold/Open"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg></div><div class="code-copy" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg></div></div></div>
+
+<p>通过验证，确定正确公钥值</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260704115722937.png"  alt="image-20260704115722937" style="zoom:50%;" >
+
+<p>生成恶意对称密钥，将k替换为X.509格式的公钥：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260704120600496.png"  alt="image-20260704120600496" style="zoom:50%;" >
+
+<p>更改算法和sub，使用恶意密钥进行签名：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260704120908356.png"  alt="image-20260704120908356" style="zoom:50%;" >
+</div><div class="post-tail-tags"></div><div class="post-nav"><a class="post-nav-prev" nopost=""></a><a class="post-nav-next" href="/2026/06/14/JS%E9%80%86%E5%90%91%E4%B9%8B%E6%9F%90%E5%B9%B3%E5%8F%B0%E7%99%BB%E5%BD%95%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%86/" title="JS逆向之某平台登录密码加密">Next post<span>JS逆向之某平台登录密码加密</span></a></div></div><aside id="post-sidebar" status="show"><div id="toc-container"><div class="toc-title"><img src="/assets/images/svg/ta/ta-toc.svg" class="icon noview" alt="Icon"><span>Table Of Content</span></div><div class="toc-content" id="toc-div"><ol class="toc-list"><li class="toc-list-item toc-list-level-1"><a class="toc-list-link" href="#JWT-%E6%94%BB%E5%87%BB"><span class="toc-list-text">JWT 攻击</span></a><ol class="toc-list-child"><li class="toc-list-item toc-list-level-2"><a class="toc-list-link" href="#JWT%E7%BB%84%E6%88%90"><span class="toc-list-text">JWT组成</span></a></li><li class="toc-list-item toc-list-level-2"><a class="toc-list-link" href="#JWT%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="toc-list-text">JWT工作过程</span></a></li><li class="toc-list-item toc-list-level-2"><a class="toc-list-link" href="#burpsuite-JWT-labs"><span class="toc-list-text">burpsuite JWT labs</span></a><ol class="toc-list-child"><li class="toc-list-item toc-list-level-3"><a class="toc-list-link" href="#%E6%9C%AA%E9%AA%8C%E8%AF%81%E7%AD%BE%E5%90%8D"><span class="toc-list-text">未验证签名</span></a></li><li class="toc-list-item toc-list-level-3"><a class="toc-list-link" href="#%E6%9C%89%E7%BC%BA%E9%99%B7%E7%9A%84%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81"><span class="toc-list-text">有缺陷的签名验证</span></a></li><li class="toc-list-item toc-list-level-3"><a class="toc-list-link" href="#%E5%BC%B1%E7%AD%BE%E5%90%8D%E5%AF%86%E9%92%A5"><span class="toc-list-text">弱签名密钥</span></a></li><li class="toc-list-item toc-list-level-3"><a class="toc-list-link" href="#%E6%B3%A8%E5%85%A5-jwk-%E5%A4%B4%E9%83%A8"><span class="toc-list-text">注入 jwk 头部</span></a></li><li class="toc-list-item toc-list-level-3"><a class="toc-list-link" href="#%E6%B3%A8%E5%85%A5jku%E5%A4%B4%E9%83%A8"><span class="toc-list-text">注入jku头部</span></a></li><li class="toc-list-item toc-list-level-3"><a class="toc-list-link" href="#KID%E8%B7%AF%E5%BE%84%E9%81%8D%E5%8E%86"><span class="toc-list-text">KID路径遍历</span></a></li><li class="toc-list-item toc-list-level-3"><a class="toc-list-link" href="#%E7%AE%97%E6%B3%95%E6%B7%B7%E6%B7%86"><span class="toc-list-text">算法混淆</span></a></li><li class="toc-list-item toc-list-level-3"><a class="toc-list-link" href="#%E7%AE%97%E6%B3%95%E6%B7%B7%E6%B7%86%EF%BC%88%E6%97%A0%E5%85%AC%E9%92%A5%E7%89%88%EF%BC%89"><span class="toc-list-text">算法混淆（无公钥版）</span></a></li></ol></li></ol></li></ol></div></div></aside></div></div><div id="toolbar" hide=""><div id="toolbar-setting-container" hide=""><div class="toolbar-item"><button id="tool-color-mode" title="Dark Mode" type="button"><img src="/assets/images/svg/ta/ta-moon.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button class="copy-text" id="tool-share" title="Share" type="button" data-text="http://example.com/2026/07/04/JWT-%E6%94%BB%E5%87%BB/"><img src="/assets/images/svg/ta/ta-share.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button id="tool-font-size-plus" title="Increase Font Size" type="button"><img src="/assets/images/svg/ta/ta-text-plus.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button id="tool-font-size-minus" title="Decrease Font Size" type="button"><img src="/assets/images/svg/ta/ta-text-minus.svg" class="icon noview" alt="Icon"></button></div></div><div class="toolbar-container"><div class="toolbar-item"><button id="tool-setting" title="Settings" type="button"><img src="/assets/images/svg/ta/ta-setting.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button id="tool-toc" title="Table Of Content" type="button"><img src="/assets/images/svg/ta/ta-toc.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button id="tool-gototop" title="Go To Top" type="button"><img src="/assets/images/svg/ta/ta-up.svg" class="icon noview" alt="Icon"></button></div></div></div><div id="music-player"></div></main><footer><div class="footer"><div id="footer-copyright">© 2026 <span>💗</span> <a href="/about#%20Url%20for%20the%20link%20of%20author">月岛</a></div><div id="footer-info"><div id="footer-framework">🚀Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/chanwj/hexo-theme-meow" title="3.3.1" target="_blank">Meow</a></div><div id="footer-runtime"><span id="runtime" data-startdate="2026-03-05T22:16:20.000Z">🌻Blog Runtime: . Years . Months . Days</span></div></div><div id="footer-pageview"></div></div></footer><div class="scripts"><script>const GLOBALCONFIG = {
+  root: '/',
+  toolbar: true,
+  lazyload_src: '/assets/images/Meow-Loading.webp',
+  friends: false,
+  album: '',
+  codeblock: true,
+  code_copy_text: false,
+  share_text: '',
+  onblur_title: 'Please Come Back～✧(´▽`ʃ♡ƪ)',
+  mouse_click: false,
+  notify:{
+    enable: true,
+    info: 'Copied successfully! Please mark the address of this post if redistribute.',
+    f12_info: 'Turned on developer mode, please follow the copyright license of this website'
+  },
+  search: {
+    enable: false,
+    path: '',
+    local: {
+      top_n_per_article: 1,
+      preload: false
+    }
+  },
+  encrypt: false,
+};
+</script><script>if (!localStorage.getItem('color-mode')) {
+  localStorage.setItem('color-mode', 'light' || 'light');
+}
+document.body.setAttribute('data-mode', localStorage.getItem('color-mode'));
+</script>
+<script src="/js/theme/tools/utils.js"></script>
+
+<script src="/js/plugins/dist/lazyload.min.js"></script>
+
+<script src="/js/plugins/view-image.min.js"></script>
+<script src="https://events.vercount.one/js" defer="defer"></script><script>if (localStorage.getItem('font-size')) {
+  document.querySelector('.post').style.fontSize = localStorage.getItem('font-size') + 'px';
+}
+</script>
+<script src="/js/plugins/dist/APlayer.min.js"></script>
+<script>const initAplayer = (data) => {
+  if (!data.length) return;
+
+  const ap = new APlayer({
+    container: document.getElementById('music-player'),
+    fixed: true,
+    autoplay: false,
+    theme: '#FFB347',
+    loop: 'all',
+    order: 'list',
+    volume: 0.7,
+    lrcType: 3,
+    audio: data
+  });
+
+  ap.on('play', () => {
+    document.getElementById('music-player').setAttribute("play", "");
+  });
+  ap.on('pause', () => {
+    document.getElementById('music-player').removeAttribute("play");
+  });
+};
+
+const fetchData = () => {
+  fetch('')
+    .then(res => res.json())
+    .then(result => initAplayer(result));
+};
+
+if ('') {
+  document.addEventListener("DOMContentLoaded", fetchData);
+} else {
+  document.addEventListener("DOMContentLoaded", initAplayer());;
+}</script>
+<script src="/js/plugins/dist/snackbar.min.js"></script>
+
+<script src="/js/main.js" type="module"></script>
+</div></body></html>
